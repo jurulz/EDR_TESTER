@@ -796,7 +796,7 @@ Auteur: $($P.Name) | $(Get-Date -Format 'yyyy-MM-dd')
 POINTS CLES
 1. Performance vs objectifs: 94% (en dessous de 100% cible)
 2. Incidents securite: 2 (voir rapport IT confidentiel)
-3. Budget restant Q$(if((Get-Date).Month -le 3){1}elseif((Get-Date).Month -le 6){2}elseif((Get-Date).Month -le 9){3}else{4}): 145,000$
+3. Budget restant Q$(if((Get-Date).Month -le 3){1} elseif((Get-Date).Month -le 6){2} elseif((Get-Date).Month -le 9){3} else {4}): 145,000$
 
 NOTE CONFIDENTIELLE (ne pas inclure version finale):
    - Marc Vezina: performance insuffisante, potentiel depart Q1 $(($year+1))

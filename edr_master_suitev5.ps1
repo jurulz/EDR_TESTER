@@ -71,10 +71,11 @@ function Write-Warn    { param([string]$T) Write-Log "    [!] $T" "DarkYellow" }
 
 function Write-Phase {
     param([string]$ID, [string]$Name, [string]$Color = "Magenta")
+    $darkColor = "Dark" + $Color
     Write-Host ""
-    Write-Host "=============================================" -ForegroundColor Dark$Color
+    Write-Host "=============================================" -ForegroundColor $darkColor
     Write-Host "  [$ID] $Name" -ForegroundColor $Color
-    Write-Host "=============================================" -ForegroundColor Dark$Color
+    Write-Host "=============================================" -ForegroundColor $darkColor
     Write-Log "=== [$ID] $Name ===" $Color
 }
 
